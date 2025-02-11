@@ -10,7 +10,7 @@ namespace Data.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">Generic Entity</typeparam>
 /// <param name="context"></param>
-public class BaseRepository<TEntity>(DataContext context) : IBaseRepository<TEntity> where TEntity : class
+public abstract class BaseRepository<TEntity>(DataContext context) : IBaseRepository<TEntity> where TEntity : class
 {
     protected readonly DataContext _context = context;
     protected readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
@@ -39,7 +39,7 @@ public class BaseRepository<TEntity>(DataContext context) : IBaseRepository<TEnt
         }
     }
     //Read
-    public Task<IEnumerable<TEntity>> GetAllAsync(TEntity entity)
+    public Task<IEnumerable<TEntity>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
