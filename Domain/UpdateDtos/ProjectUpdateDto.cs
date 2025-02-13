@@ -1,8 +1,8 @@
-﻿namespace Domain.Dtos;
+﻿namespace Domain.UpdateDtos;
 
 public class ProjectUpdateDto
 {
-    public int Id { get; set; } 
+    public int Id { get; set; }
 
     public string ProjectNumber { get; } = null!;
 

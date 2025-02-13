@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿namespace Domain.UpdateDtos;
 
-namespace Domain.Dtos;
-
-public class UserDto
+public class UserUpdateDto
 {
+    public int Id { get; set; }
     public string FirstName { get; set; } = null!;
-    
+
     public string LastName { get; set; } = null!;
 
     public string Email { get; set; } = null!;

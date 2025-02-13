@@ -1,17 +1,19 @@
 ﻿using Data.Entities;
 using Domain.Dtos;
+using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 
 namespace Domain.Factories;
 
-public class CustomerFactory
+public class CustomerFactory : ICustomerFactory
 {
-    public static CustomerDto CreateCustomerDto()
+    public CustomerDto CreateCustomerDto()
     {
         return new CustomerDto();
     }
     
-   public static CustomerUpdateDto CreateCustomerUpdateDto(CustomerUpdateDto customerUpdateDto)
+   public CustomerUpdateDto CreateCustomerUpdateDto(CustomerUpdateDto customerUpdateDto)
     {
         return new CustomerUpdateDto()
         {
@@ -20,7 +22,7 @@ public class CustomerFactory
         };
     }
 
-    public static CustomerEntity CreateCustomerEntity(CustomerDto customerDto)
+    public CustomerEntity CreateCustomerEntity(CustomerDto customerDto)
     {
         return new CustomerEntity()
         {
@@ -29,7 +31,7 @@ public class CustomerFactory
         };
     }
 
-    public static Customer CreateCustomer(CustomerEntity customerEntity)
+    public Customer CreateCustomer(CustomerEntity customerEntity)
     {
         return new Customer()
         {

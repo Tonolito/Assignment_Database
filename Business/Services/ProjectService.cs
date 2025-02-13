@@ -1,23 +1,23 @@
 ﻿using Data.Entities;
 using Data.Interfaces;
-using Data.Repositories;
 using Domain.Dtos;
-using Domain.Factories;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 using System.Diagnostics;
 
 namespace Business.Services;
 
-public class ProjectService
+public class ProjectService(IProjectRepository projectRepository, IProjectFactory projectFactory)
 {
-    private readonly IProjectRepository _projectRepository;
-    private readonly IProjectFactory _projectFactory;
-    public async Task<bool> CreateProjectAsync(ProjectDto dto)
+    private readonly IProjectRepository _projectRepository = projectRepository;
+    private readonly IProjectFactory _projectFactory = projectFactory;
+
+    public async Task<bool> CreateProjectAsync(ProjectDto projectDto)
     {
         try
         {
-            ProjectEntity projectEntity = _projectFactory.CreateProjectEntity(dto);
+            ProjectEntity projectEntity = _projectFactory.CreateProjectEntity(projectDto);
 
             await _projectRepository.CreateAsync(projectEntity);
 
@@ -25,7 +25,7 @@ public class ProjectService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Project Service CreateProject Error:{ex}");
+            Debug.WriteLine($"Project Service CreateProjectAsync Error:{ex}");
             return false;
         }
     }
@@ -44,16 +44,30 @@ public class ProjectService
         }
     }
 
-    public async Task<Project> GetCustomerByIdAsync(int id)
+    public async Task<Project> GetProjectByIdAsync(int id)
     {
         try
         {
-            var customerEntity = await _projectRepository.GetAsync(x => x.Id == id);
-            return _projectFactory.CreateProject(customerEntity);
+            var projectEntity = await _projectRepository.GetAsync(x => x.Id == id);
+            return _projectFactory.CreateProject(projectEntity);
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Customer Service GetCustomerByIdAsync Error:{ex}");
+            return null!;
+        }
+    }
+
+    public async Task<Project> GetProjectByProjectNumberAsync(string projectNumber)
+    {
+        try
+        {
+            var projectEntity = await _projectRepository.GetAsync(x => x.ProjectNumber == projectNumber);
+            return _projectFactory.CreateProject(projectEntity);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Customer Service GetProjectByProjectNumberAsync Error:{ex}");
             return null!;
         }
     }
@@ -88,7 +102,7 @@ public class ProjectService
         }
     }
 
-    public async Task<bool> DeleteCustomerAsync(int id)
+    public async Task<bool> DeleteProjectAsync(int id)
     {
         var result = await _projectRepository.DeleteAsync(x => x.Id == id);
         return result;

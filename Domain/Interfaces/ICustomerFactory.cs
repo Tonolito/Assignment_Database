@@ -1,6 +1,7 @@
 ﻿using Data.Entities;
 using Domain.Dtos;
 using Domain.Models;
+using Domain.UpdateDtos;
 
 namespace Domain.Interfaces;
 

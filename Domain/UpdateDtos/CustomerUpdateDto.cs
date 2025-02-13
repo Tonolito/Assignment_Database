@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos;
+﻿namespace Domain.UpdateDtos;
 
 public class CustomerUpdateDto
 {

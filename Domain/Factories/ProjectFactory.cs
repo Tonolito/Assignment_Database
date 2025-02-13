@@ -1,17 +1,19 @@
 ﻿using Data.Entities;
 using Domain.Dtos;
+using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 
 namespace Domain.Factories;
 
-public class ProjectFactory
+public class ProjectFactory : IProjectFactory
 {
-    public static ProjectDto CreateProjectDto()
+    public ProjectDto CreateProjectDto()
     {
         return new ProjectDto();
     }
 
-    public static ProjectUpdateDto CreateProjectUpdateDto(ProjectUpdateDto projectUpdateDto)
+    public ProjectUpdateDto CreateProjectUpdateDto(ProjectUpdateDto projectUpdateDto)
     {
         return new ProjectUpdateDto()
         {
@@ -28,7 +30,7 @@ public class ProjectFactory
         };
     }
 
-    public static ProjectEntity CreateProjectEntity(ProjectDto projectDto)
+    public ProjectEntity CreateProjectEntity(ProjectDto projectDto)
     {
         return new ProjectEntity()
         {
@@ -45,7 +47,7 @@ public class ProjectFactory
         };
     }
 
-    public static Project CreateProject(ProjectEntity projectEntity)
+    public Project CreateProject(ProjectEntity projectEntity)
     {
         return new Project()
         {

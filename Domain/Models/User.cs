@@ -1,12 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿namespace Domain.Models;
 
-namespace Domain.Dtos;
-
-public class UserDto
+public class User
 {
     public string FirstName { get; set; } = null!;
-    
+
     public string LastName { get; set; } = null!;
 
     public string Email { get; set; } = null!;

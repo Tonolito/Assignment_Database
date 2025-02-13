@@ -24,6 +24,10 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
     /// <returns>Entity</returns>
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
+        if (entity == null)
+        {
+            return null!;
+        }
         try
         {
             await _dbSet.AddAsync(entity);
@@ -34,32 +38,82 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"CreateAsync Error: {ex}");
+            Debug.WriteLine($"CreateAsync ({nameof(TEntity)}) Error: {ex}");
             return null!;
         }
     }
     //Read
-    public Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        throw new NotImplementedException();
+       return await _dbSet.ToListAsync();
+        
     }
-    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
+
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
     {
-        throw new NotImplementedException();
+        return await _dbSet.AnyAsync(expression);
+
+
     }
-    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
+    public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
     {
-        throw new NotImplementedException();
+        if (expression == null)
+        {
+            return null!;
+        }
+
+        return await _dbSet.FirstOrDefaultAsync(expression) ?? null!;
+        
     }
     //Update
-    public Task<TEntity> UpdateAsync(Expression<Func<TEntity, bool>> expression, TEntity updatedEntity)
+    public async Task<TEntity> UpdateAsync(Expression<Func<TEntity, bool>> expression, TEntity updatedEntity)
     {
-        throw new NotImplementedException();
+        if (updatedEntity == null)
+        {
+            return null!;
+        }
+        try
+        {
+            var existingEntity = await _dbSet.FirstOrDefaultAsync(expression) ?? null!;
+            if (existingEntity == null)
+            {
+                return null!;
+            }
+            _dbSet.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
+            await _context.SaveChangesAsync();
+            return existingEntity;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"UpdateAsync ({nameof(TEntity)}) Error: {ex}");
+
+            return null!;
+        }
     }
     //Delete
-    public Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression)
-    {       
-        throw new NotImplementedException();
+    public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        if (expression == null)
+        {
+            return false;
+        }
+        try
+        {
+            var existingEntity = await _dbSet.FirstOrDefaultAsync(expression) ?? null!;
+            if (existingEntity == null)
+            {
+                return false;
+            }
+            _dbSet.Remove(existingEntity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"DeleteAsync ({nameof(TEntity)}) Error: {ex}");
+
+            return false;
+        }
     }
     
 }

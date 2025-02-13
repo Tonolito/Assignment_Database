@@ -4,6 +4,7 @@ using Data.Repositories;
 using Domain.Dtos;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 using System.Diagnostics;
 
 namespace Business.Services;
@@ -14,7 +15,6 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
     private readonly ICustomerFactory _customerFactory = customerFactory;
 
     // https://youtu.be/qKxl0f6ZwqA
-
     public async Task<bool> CreateCustomerAsync(CustomerDto dto)
     {
         try
@@ -27,7 +27,7 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Customer Service CreateCustomer Error:{ex}");
+            Debug.WriteLine($"Customer Service CreateCustomerAsync Error:{ex}");
             return false;
         }
     }
@@ -55,7 +55,7 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Customer Service GetCustomerAsync Error:{ex}");
+            Debug.WriteLine($"Customer Service GetCustomerById Error:{ex}");
             return null!;
         }
     }
@@ -75,7 +75,7 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
                 existingCustomerEntity.CompanyName = updateDto.CompanyName;
             }
 
-            var updatedEntity = await _customerRepository.UpdateAsync(x => x.Id == updateDto.Id , existingCustomerEntity!);
+            var updatedEntity = await _customerRepository.UpdateAsync(x => x.Id == updateDto.Id, existingCustomerEntity!);
 
             var customer = _customerFactory.CreateCustomer(updatedEntity);
             return true;
@@ -87,9 +87,11 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
         }
     }
 
-    public async Task<bool> DeleteCustomerAsync(int id )
+    public async Task<bool> DeleteCustomerAsync(int id)
     {
         var result = await _customerRepository.DeleteAsync(x => x.Id == id);
         return result;
     }
 }
+
+

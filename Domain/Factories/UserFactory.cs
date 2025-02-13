@@ -1,17 +1,31 @@
 ﻿using Data.Entities;
 using Domain.Dtos;
+using Domain.Interfaces;
+using Domain.Models;
+using Domain.UpdateDtos;
 
 namespace Domain.Factories;
 
-public static class UserFactory
+public class UserFactory : IUserFactory
 {
 
-    public static UserDto CreateUserDto()
+    public UserDto CreateUserDto()
     {
         return new UserDto();
     }
 
-    public static UserEntity CreateUserEntity(UserDto userDto)
+    public UserUpdateDto CreateUserUpdateDto(UserUpdateDto userUpdateDto)
+    {
+        return new UserUpdateDto()
+        {
+            FirstName = userUpdateDto.FirstName,
+            LastName = userUpdateDto.LastName,
+            Email = userUpdateDto.Email,
+            RoleId = userUpdateDto.RoleId,
+        };
+    }
+
+    public UserEntity CreateUserEntity(UserDto userDto)
     {
         return new UserEntity()
         {
@@ -24,7 +38,16 @@ public static class UserFactory
         };
     }
 
-    public static User
+    public User CreateUser(UserEntity userEntity)
+    {
+        return new User()
+        {
+            FirstName = userEntity.FirstName,
+            LastName = userEntity.LastName,
+            Email = userEntity.Email,
+            RoleId = userEntity.RoleId,
+        };
+    }
 
 
 }
