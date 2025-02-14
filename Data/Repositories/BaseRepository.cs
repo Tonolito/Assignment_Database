@@ -22,7 +22,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
     /// </summary>
     /// <param name="entity">Generic Entity</param>
     /// <returns>Entity</returns>
-    public async Task<TEntity> CreateAsync(TEntity entity)
+    public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
         if (entity == null)
         {

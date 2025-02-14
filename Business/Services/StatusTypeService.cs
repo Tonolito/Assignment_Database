@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Dtos;
@@ -10,7 +11,7 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStatusTypeFactory statusTypeFactory)
+public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStatusTypeFactory statusTypeFactory) : IStatusTypeService
 {
     private readonly IStatusTypeRepository _statusTypeRepository = statusTypeRepository;
     private readonly IStatusTypeFactory _statusTypeFactory = statusTypeFactory;
@@ -19,11 +20,18 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
     {
         try
         {
-            StatusTypeEntity statusTypeEntity = _statusTypeFactory.CreateStatusEntity(statusTypeDto);
+            StatusTypeEntity statusTypeEntity = _statusTypeFactory.CreateStatusTypeEntity(statusTypeDto);
 
-            await _statusTypeRepository.CreateAsync(statusTypeEntity);
+            var result = await _statusTypeRepository.CreateAsync(statusTypeEntity);
+            if (result == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
 
-            return true;
+            }
         }
         catch (Exception ex)
         {
@@ -43,6 +51,27 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
         {
             Debug.WriteLine($"StatusType Service GetStatusTypesAsync Error:{ex}");
             return [];
+        }
+    }
+    public async Task<bool> UpdateServiceAsync(StatusTypeUpdateDto statusTypeUpdateDto)
+    {
+        try
+        {
+            var existingStatusTypeEntity = await _statusTypeRepository.GetAsync(x => x.Id == statusTypeUpdateDto.Id);
+            if (existingStatusTypeEntity != null)
+            {
+
+            }
+
+            var updatedEntity = await _statusTypeRepository.UpdateAsync(x => x.Id == statusTypeUpdateDto.Id, existingStatusTypeEntity!);
+
+            var statusType = _statusTypeFactory.CreateStatusType(updatedEntity);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Service Service UpdateServiceAsync Error:{ex}");
+            return false;
         }
     }
 

@@ -57,10 +57,10 @@ public class ProjectFactory : IProjectFactory
             StartDate = projectEntity.StartDate,
             EndDate = projectEntity.EndDate,
             TotalPrice = projectEntity.TotalPrice,
-            StatusId = projectEntity.StatusId,
-            UserId = projectEntity.UserId,
-            ServiceId = projectEntity.ServiceId,
-            CustomerId = projectEntity.CustomerId,
+            StatusName = projectEntity.Status.StatusName,
+            UserName = projectEntity.User.FirstName,
+            ServiceName = projectEntity.Service.ServiceName,
+            CustomerName = projectEntity.Customer.CustomerName,
 
         };
     }

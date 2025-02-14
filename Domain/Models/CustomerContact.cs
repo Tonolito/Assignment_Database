@@ -9,4 +9,6 @@ public class CustomerContact
     public string Email { get; set; } = null!;
 
     public string PhoneNumber { get; set; } = null!;
+
+    public string CustomerName { get; set; } = null!;
 }

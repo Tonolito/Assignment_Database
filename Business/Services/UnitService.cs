@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Domain.Dtos;
 using Domain.Interfaces;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactory)
+public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactory) : IUnitService
 {
     private readonly IUnitRepository _unitRepository = unitRepository;
     private readonly IUnitFactory _unitFactory = unitFactory;
@@ -18,8 +19,11 @@ public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactor
         {
             UnitEntity unitEntity = _unitFactory.CreateUnitEntity(dto);
 
-            await _unitRepository.CreateAsync(unitEntity);
-
+            var result = await _unitRepository.CreateAsync(unitEntity);
+            if (result == null)
+            {
+                return false;
+            }
             return true;
         }
         catch (Exception ex)

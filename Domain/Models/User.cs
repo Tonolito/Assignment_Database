@@ -8,5 +8,5 @@ public class User
 
     public string Email { get; set; } = null!;
 
-    public int RoleId { get; set; }
+    public string RoleName { get; set; } = null!;
 }

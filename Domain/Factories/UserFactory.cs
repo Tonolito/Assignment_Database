@@ -45,7 +45,8 @@ public class UserFactory : IUserFactory
             FirstName = userEntity.FirstName,
             LastName = userEntity.LastName,
             Email = userEntity.Email,
-            RoleId = userEntity.RoleId,
+            RoleName = userEntity.Role.RoleName,
+            
         };
     }
 

@@ -8,7 +8,7 @@ public interface IStatusTypeFactory
 {
     StatusTypeDto CreateStatusTypeDto();
 
-    StatusTypeEntity CreateStatusEntity(StatusTypeDto statusTypeDto);
+    StatusTypeEntity CreateStatusTypeEntity(StatusTypeDto statusTypeDto);
 
     StatusType CreateStatusType(StatusTypeEntity statusTypeEntity);
 }

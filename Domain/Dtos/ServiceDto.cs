@@ -10,4 +10,6 @@ public class ServiceDto
 
     public decimal Price { get; set; }
 
+    public int UnitId { get; set; }
+
 }

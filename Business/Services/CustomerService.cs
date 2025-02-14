@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Dtos;
@@ -9,7 +10,7 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class CustomerService(ICustomerRepository customerRepository, ICustomerFactory customerFactory)
+public class CustomerService(ICustomerRepository customerRepository, ICustomerFactory customerFactory) : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository = customerRepository;
     private readonly ICustomerFactory _customerFactory = customerFactory;
@@ -21,8 +22,11 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
         {
             CustomerEntity customerEntity = _customerFactory.CreateCustomerEntity(dto);
 
-            await _customerRepository.CreateAsync(customerEntity);
-
+            var result = await _customerRepository.CreateAsync(customerEntity);
+            if (result == null)
+            {
+                return false;
+            }
             return true;
         }
         catch (Exception ex)

@@ -18,6 +18,33 @@ builder.Services.AddScoped<ICustomerContactRepository, CustomerContactRepository
 builder.Services.AddScoped<ICustomerContactService, CustomerContactService>();
 builder.Services.AddScoped<ICustomerContactFactory, CustomerContactFactory>();
 
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRoleFactory, RoleFactory>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserFactory, UserFactory>();
+
+builder.Services.AddScoped<IStatusTypeRepository, StatusTypeRepository>();
+builder.Services.AddScoped<IStatusTypeService, StatusTypeService>();
+builder.Services.AddScoped<IStatusTypeFactory, StatusTypeFactory>();
+
+builder.Services.AddScoped<IUnitRepository, UnitRepository>();
+builder.Services.AddScoped<IUnitService, UnitService>();
+builder.Services.AddScoped<IUnitFactory, UnitFactory>();
+
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IServiceFactory, ServiceFactory>();
+
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerFactory, CustomerFactory>();
+
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProjectFactory, ProjectFactory>();
 // SERVICES
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Domain.Dtos;
 using Domain.Interfaces;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactory)
+public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactory) : IRoleService
 {
     private readonly IRoleRepository _roleRepository = roleRepository;
     private readonly IRoleFactory _roleFactory = roleFactory;
@@ -18,9 +19,16 @@ public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactor
         {
             RoleEntity roleEntity = _roleFactory.CreateRoleEntity(roleDto);
 
-            await _roleRepository.CreateAsync(roleEntity);
+           var result = await _roleRepository.CreateAsync(roleEntity);
 
-            return true;
+            if (result == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         catch (Exception ex)
         {

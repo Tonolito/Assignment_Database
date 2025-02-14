@@ -22,9 +22,16 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
         {
             CustomerContactEntity customerContactEntity = _customerContactFactory.CreateCustomerContactEntity(customerContactDto);
 
-            await _customerContactRepository.CreateAsync(customerContactEntity);
-
-            return true;
+            var result = await _customerContactRepository.CreateAsync(customerContactEntity);
+            if (result == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            
         }
         catch (Exception ex)
         {

@@ -29,10 +29,12 @@ public class CustomerContactFactory : ICustomerContactFactory
     {
         return new CustomerContactEntity()
         {
+            // ID?
             FirstName = customerContactDto.FirstName,
             LastName = customerContactDto.LastName,
             Email = customerContactDto.Email,   
             PhoneNumber = customerContactDto.PhoneNumber,
+            CustomerId = customerContactDto.CustomerId,
         };
     }
     
@@ -40,10 +42,12 @@ public class CustomerContactFactory : ICustomerContactFactory
     {
         return new CustomerContact()
         {
+            // ID?
             FirstName = customerContactEntity.FirstName,
             LastName = customerContactEntity.LastName,
             Email = customerContactEntity.Email,
             PhoneNumber = customerContactEntity.PhoneNumber,
+            CustomerName = customerContactEntity.Customer.CustomerName
         };
     }
 }

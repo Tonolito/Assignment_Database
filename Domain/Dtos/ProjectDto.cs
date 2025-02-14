@@ -7,7 +7,7 @@ public class ProjectDto
     // public int Id { get; set; } Ska man ha Id med?
 
   
-    public string ProjectNumber { get; } = null!;
+    public string ProjectNumber { get; set; } = null!;
 
    
     public string Title { get; set; } = null!;

@@ -12,7 +12,7 @@ public class StatusTypeFactory : IStatusTypeFactory
         return new StatusTypeDto();
     }
 
-    public StatusTypeEntity CreateStatusEntity(StatusTypeDto statusTypeDto)
+    public StatusTypeEntity CreateStatusTypeEntity(StatusTypeDto statusTypeDto)
     {
         return new StatusTypeEntity()
         {

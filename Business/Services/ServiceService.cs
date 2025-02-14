@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Dtos;
@@ -9,7 +10,7 @@ using Domain.UpdateDtos;
 using System.Diagnostics;
 namespace Business.Services;
 
-public class ServiceService(IServiceRepository serviceRepository, IServiceFactory serviceFactory)
+public class ServiceService(IServiceRepository serviceRepository, IServiceFactory serviceFactory) : IServiceService
 {
 
     private readonly IServiceRepository _serviceRepository = serviceRepository;
@@ -21,7 +22,11 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
         {
             ServiceEntity serviceEntity = _serviceFactory.CreateServiceEntity(serviceDto);
 
-            await _serviceRepository.CreateAsync(serviceEntity);
+            var result = await _serviceRepository.CreateAsync(serviceEntity);
+            if (result == null)
+            {
+                return false;
+            }
 
             return true;
         }

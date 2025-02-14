@@ -1,5 +1,4 @@
 ﻿using Business.Interfaces;
-using Data.Interfaces;
 using Domain.Dtos;
 using Domain.UpdateDtos;
 using Microsoft.AspNetCore.Http;
@@ -9,21 +8,18 @@ namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CustomerContactController(ICustomerContactService customerContactService) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
-    private readonly ICustomerContactService _customerContactService = customerContactService;
-    
-
-    // CRUD
+    IUserService _userService = userService;
 
     [HttpPost]
-    public async Task<IActionResult> Create(CustomerContactDto dto)
+    public async Task<IActionResult> Create(UserDto dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest();
         }
-        var result = await _customerContactService.CreateCustomerContactAsync(dto);
+        var result = await _userService.CreateUserAsync(dto);
 
         return result != false ? Created("", result) : Problem("Something went wrong.");
     }
@@ -31,22 +27,22 @@ public class CustomerContactController(ICustomerContactService customerContactSe
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = await _customerContactService.GetCustomerContactsAsync();
+        var result = await _userService.GetUsersAsync();
         return result != null ? Ok(result) : NotFound("Was not found");
-            
+
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, CustomerContactUpdateDto updatedDto)
+    public async Task<IActionResult> Update(int id, UserUpdateDto updatedDto)
     {
-        var result = await _customerContactService.UpdateCustomerContactAsync(   updatedDto);
+        var result = await _userService.UpdateUserAsync(updatedDto);
         return result == true ? Ok(result) : NotFound("Not found");
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await _customerContactService.DeleteCustomerContactAsync(id);
+        var result = await _userService.DeleteUserAsync(id);
         return result == true ? Ok(result) : NotFound("Can't find or delete");
 
     }

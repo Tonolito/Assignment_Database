@@ -29,6 +29,7 @@ public class ServiceFactory : IServiceFactory
         {
            ServiceName = serviceDto.ServiceName,
            Price = serviceDto.Price,
+           UnitId = serviceDto.UnitId,
         };
     }
 
@@ -38,6 +39,8 @@ public class ServiceFactory : IServiceFactory
         {
             ServiceName= serviceEntity.ServiceName,
             Price = serviceEntity.Price,
+            UnitName = serviceEntity.Unit.UnitName,
+
 
         };
     }

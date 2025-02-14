@@ -11,4 +11,5 @@ public class Service
 
     public decimal Price { get; set; }
 
+    public string UnitName { get; set; } = null!;
 }

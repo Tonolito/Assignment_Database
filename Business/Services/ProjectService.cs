@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Domain.Dtos;
 using Domain.Interfaces;
@@ -8,7 +9,7 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class ProjectService(IProjectRepository projectRepository, IProjectFactory projectFactory)
+public class ProjectService(IProjectRepository projectRepository, IProjectFactory projectFactory) : IProjectService
 {
     private readonly IProjectRepository _projectRepository = projectRepository;
     private readonly IProjectFactory _projectFactory = projectFactory;
@@ -19,7 +20,11 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
         {
             ProjectEntity projectEntity = _projectFactory.CreateProjectEntity(projectDto);
 
-            await _projectRepository.CreateAsync(projectEntity);
+            var result = await _projectRepository.CreateAsync(projectEntity);
+            if (result == null)
+            {
+                return false;
+            }
 
             return true;
         }

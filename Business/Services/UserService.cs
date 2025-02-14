@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Business.Interfaces;
+using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
 using Domain.Dtos;
@@ -10,9 +11,9 @@ using System.Diagnostics;
 
 namespace Business.Services;
 
-public class UserService(IBaseRepository<UserEntity> repository, IUserFactory userFactory)
+public class UserService(IUserRepository repository, IUserFactory userFactory) : IUserService
 {
-    private readonly IBaseRepository<UserEntity> _repository = repository;
+    private readonly IUserRepository _repository = repository;
     private readonly IUserFactory _userFactory = userFactory;
 
     public async Task<bool> CreateUserAsync(UserDto dto)
@@ -21,9 +22,16 @@ public class UserService(IBaseRepository<UserEntity> repository, IUserFactory us
         {
             UserEntity entity = _userFactory.CreateUserEntity(dto);
 
-            await _repository.CreateAsync(entity);
+            var result = await _repository.CreateAsync(entity);
 
-            return true;
+            if (result == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         catch (Exception ex)
         {
@@ -59,7 +67,7 @@ public class UserService(IBaseRepository<UserEntity> repository, IUserFactory us
             return null!;
         }
     }
-   
+
     public async Task<bool> UpdateUserAsync(UserUpdateDto updateDto)
     {
         try
@@ -67,7 +75,7 @@ public class UserService(IBaseRepository<UserEntity> repository, IUserFactory us
             var existingEntity = await _repository.GetAsync(x => x.Id == updateDto.Id);
             if (existingEntity != null)
             {
-               
+
             }
 
             var updatedEntity = await _repository.UpdateAsync(x => x.Id == updateDto.Id, existingEntity!);
