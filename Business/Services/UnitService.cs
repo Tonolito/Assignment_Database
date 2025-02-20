@@ -1,9 +1,11 @@
 ﻿using Business.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 using Domain.Dtos;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 using System.Diagnostics;
 
 namespace Business.Services;
@@ -58,6 +60,38 @@ public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactor
         {
             Debug.WriteLine($"Unit Service GetUnitById Error:{ex}");
             return null!;
+        }
+    }
+    public async Task<bool> UpdateUnitAsync(UnitUpdateDto updateDto)
+    {
+        try
+        {
+            var exstingEntity = await  _unitRepository.GetAsync(x => x.Id == updateDto.UnitId);
+            if (exstingEntity == null)
+            {
+                return false;
+            }
+
+
+            exstingEntity.Id = updateDto.UnitId;
+            exstingEntity.UnitName = updateDto.UnitName;
+            
+
+
+
+            var updatedEntity = await _unitRepository.UpdateAsync(x => x.Id == updateDto.UnitId, exstingEntity!);
+
+            if (updatedEntity == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
         }
     }
 

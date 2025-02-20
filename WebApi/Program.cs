@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\Assignment_Database\Data\Databases\local_AssignmentDatabase_db.mdf;Integrated Security=True"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\Assignment_Database\Data\Databases\Local_Assignment_Database_db.mdf;Integrated Security=True;Connect Timeout=30"));
 builder.Services.AddScoped<ICustomerContactRepository, CustomerContactRepository>();
 builder.Services.AddScoped<ICustomerContactService, CustomerContactService>();
 builder.Services.AddScoped<ICustomerContactFactory, CustomerContactFactory>();

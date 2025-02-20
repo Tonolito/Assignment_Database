@@ -17,7 +17,7 @@ public class ProjectFactory : IProjectFactory
     {
         return new ProjectUpdateDto()
         {
-            
+            ProjectNumber = projectUpdateDto.ProjectNumber,
             Title = projectUpdateDto.Title,
             Description = projectUpdateDto.Description,
             StartDate = projectUpdateDto.StartDate,
@@ -34,7 +34,7 @@ public class ProjectFactory : IProjectFactory
     {
         return new ProjectEntity()
         {
-            // Sätta projectnumber?,
+            ProjectNumber= projectDto.ProjectNumber,
             Title = projectDto.Title,
             Description = projectDto.Description,
             StartDate = projectDto.StartDate,
@@ -49,17 +49,23 @@ public class ProjectFactory : IProjectFactory
 
     public Project CreateProject(ProjectEntity projectEntity)
     {
+     
         return new Project()
         {
-            
+            ProjectId = projectEntity.Id,
+            ProjectNumber = projectEntity.ProjectNumber,
             Title = projectEntity.Title,
             Description = projectEntity.Description,
             StartDate = projectEntity.StartDate,
             EndDate = projectEntity.EndDate,
             TotalPrice = projectEntity.TotalPrice,
+            StatusId = projectEntity.StatusId,
             StatusName = projectEntity.Status.StatusName,
+            UserId = projectEntity.UserId,
             UserName = projectEntity.User.FirstName,
+            ServiceId = projectEntity.ServiceId,
             ServiceName = projectEntity.Service.ServiceName,
+            CustomerId = projectEntity.CustomerId,
             CustomerName = projectEntity.Customer.CustomerName,
 
         };

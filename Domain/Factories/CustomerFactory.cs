@@ -35,7 +35,7 @@ public class CustomerFactory : ICustomerFactory
     {
         return new Customer()
         {
-           
+            CustomerId = customerEntity.Id, // LÄGG TILL
             CustomerName = customerEntity.CustomerName,
             CompanyName = customerEntity.CompanyName,
         };

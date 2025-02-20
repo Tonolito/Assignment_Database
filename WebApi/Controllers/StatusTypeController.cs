@@ -35,6 +35,13 @@ public class StatusTypeController(IStatusTypeService statusTypeService) : Contro
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _statusTypeService.GetStatusTypeById(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, StatusTypeUpdateDto updatedDto)

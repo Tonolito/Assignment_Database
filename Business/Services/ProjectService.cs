@@ -82,27 +82,36 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
         try
         {
             var existingProjectEntity = await _projectRepository.GetAsync(x => x.Id == updateDto.Id);
-            if (existingProjectEntity != null)
+            if (existingProjectEntity == null)
             {
-                existingProjectEntity.Title = updateDto.Title;
-                existingProjectEntity.Description = updateDto.Description;
-                existingProjectEntity.StartDate = updateDto.StartDate;
-                existingProjectEntity.EndDate = updateDto.EndDate;
-                existingProjectEntity.TotalPrice = updateDto.TotalPrice;
-                existingProjectEntity.StatusId = updateDto.StatusId;
-                existingProjectEntity.UserId = updateDto.UserId;
-                existingProjectEntity.ServiceId = updateDto.ServiceId;
-                existingProjectEntity.CustomerId = updateDto.CustomerId;
+                return false;  // Om projektet inte finns, returnera false
             }
 
+            // Uppdatera projektet
+            existingProjectEntity.ProjectNumber = updateDto.ProjectNumber;
+            existingProjectEntity.Title = updateDto.Title;
+            existingProjectEntity.Description = updateDto.Description;
+            existingProjectEntity.StartDate = updateDto.StartDate;
+            existingProjectEntity.EndDate = updateDto.EndDate;
+            existingProjectEntity.TotalPrice = updateDto.TotalPrice;
+            existingProjectEntity.StatusId = updateDto.StatusId;
+            existingProjectEntity.UserId = updateDto.UserId;
+            existingProjectEntity.ServiceId = updateDto.ServiceId;
+            existingProjectEntity.CustomerId = updateDto.CustomerId;
+
+            // Uppdatera projektet i databasen
             var updatedEntity = await _projectRepository.UpdateAsync(x => x.Id == updateDto.Id, existingProjectEntity!);
 
-            var customer = _projectFactory.CreateProject(updatedEntity);
+            if (updatedEntity == null)
+            {
+                return false;  // Misslyckades att uppdatera
+            }
+
             return true;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Customer Service UpdateProjectAsync Error:{ex}");
+           
             return false;
         }
     }

@@ -31,7 +31,13 @@ public class UserController(IUserService userService) : ControllerBase
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _userService.GetUserById(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
 
+    }
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UserUpdateDto updatedDto)
     {

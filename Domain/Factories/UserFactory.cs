@@ -42,10 +42,13 @@ public class UserFactory : IUserFactory
     {
         return new User()
         {
+            UserId = userEntity.Id,
             FirstName = userEntity.FirstName,
             LastName = userEntity.LastName,
             Email = userEntity.Email,
+            RoleId = userEntity.RoleId,
             RoleName = userEntity.Role.RoleName,
+            
             
         };
     }

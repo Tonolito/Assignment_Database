@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250213081114_AddedUnitsTable")]
-    partial class AddedUnitsTable
+    [Migration("20250219153936_New Db")]
+    partial class NewDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,6 +97,10 @@ namespace Data.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("Date");
+
+                    b.Property<string>("ProjectNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");

@@ -37,8 +37,10 @@ public class ServiceFactory : IServiceFactory
     {
         return new Service()
         {
+            ServiceId = serviceEntity.Id,
             ServiceName= serviceEntity.ServiceName,
             Price = serviceEntity.Price,
+            Unitid = serviceEntity.UnitId,
             UnitName = serviceEntity.Unit.UnitName,
 
 

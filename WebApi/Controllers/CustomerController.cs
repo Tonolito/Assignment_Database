@@ -35,6 +35,13 @@ public class CustomerController(ICustomerService customerService) : ControllerBa
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _customerService.GetCustomerById(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, CustomerUpdateDto updatedDto)

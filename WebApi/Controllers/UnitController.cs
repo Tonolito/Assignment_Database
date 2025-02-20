@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Business.Services;
 using Domain.Dtos;
 using Domain.UpdateDtos;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +32,20 @@ public class UnitController(IUnitService unitService) : ControllerBase
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _unitService.GetUnitById(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
 
-    
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, UnitUpdateDto updatedDto)
+    {
+        var result = await _unitService.UpdateUnitAsync(updatedDto);
+        return result == true ? Ok(result) : NotFound("Not found");
+    }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)

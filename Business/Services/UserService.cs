@@ -72,13 +72,21 @@ public class UserService(IUserRepository repository, IUserFactory userFactory) :
     {
         try
         {
-            var existingEntity = await _repository.GetAsync(x => x.Id == updateDto.Id);
-            if (existingEntity != null)
+
+            var existingEntity = await _repository.GetAsync(x => x.Id == updateDto.UserId);
+            if (existingEntity == null)
             {
-
+                return false;
             }
+            Console.WriteLine($"Updating User: {existingEntity.Id}, RoleId: {existingEntity.RoleId}");
 
-            var updatedEntity = await _repository.UpdateAsync(x => x.Id == updateDto.Id, existingEntity!);
+            existingEntity.Id = updateDto.UserId;
+            existingEntity.FirstName = updateDto.FirstName;
+            existingEntity.LastName = updateDto.LastName;
+            existingEntity.Email = updateDto.Email;
+            existingEntity.RoleId = updateDto.RoleId;
+
+            var updatedEntity = await _repository.UpdateAsync(x => x.Id == updateDto.UserId, existingEntity!);
 
             var customer = _userFactory.CreateUser(updatedEntity);
             return true;

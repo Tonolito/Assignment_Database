@@ -72,13 +72,18 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
     {
         try
         {
-            var existingCustomerContactEntity = await _customerContactRepository.GetAsync(x => x.Id == CustomerContactupdateDto.Id);
-            if (existingCustomerContactEntity != null)
+            var existingEntity = await _customerContactRepository.GetAsync(x => x.Id == CustomerContactupdateDto.CustomerContactId);
+            if (existingEntity == null)
             {
-
+                return false;
             }
 
-            var updatedEntity = await _customerContactRepository.UpdateAsync(x => x.Id == CustomerContactupdateDto.Id, existingCustomerContactEntity!);
+            existingEntity.FirstName = CustomerContactupdateDto.FirstName;
+            existingEntity.LastName = CustomerContactupdateDto.LastName;
+            existingEntity.CustomerId = CustomerContactupdateDto.CustomerId;
+            existingEntity.Email = CustomerContactupdateDto.Email;
+            existingEntity.PhoneNumber = CustomerContactupdateDto.PhoneNumber;
+            var updatedEntity = await _customerContactRepository.UpdateAsync(x => x.Id == CustomerContactupdateDto.CustomerContactId, existingEntity!);
 
             var customer = _customerContactFactory.CreateCustomerContact(updatedEntity);
             return true;

@@ -4,7 +4,7 @@ public class ProjectUpdateDto
 {
     public int Id { get; set; }
 
-    public string ProjectNumber { get; } = null!;
+    public string ProjectNumber { get; set; } = null!;
 
 
     public string Title { get; set; } = null!;

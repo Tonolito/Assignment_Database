@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/Css/main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <a id="logo" href="index.html"> LOGO </a>
+        <nav id="main-menu" class="navbar">
+          <a class="nav-link" href="project.html">Projects</a>
+          <a class="nav-link" href="project.html">Users</a>
+          <a class="nav-link" href="project.html">Customers</a>
+          <a class="nav-link" href="project.html">Services</a>
+          <a class="nav-link" href="project.html">Miscellaneous</a>
+        </nav>
+        <a>TEST</a>
+      </div>
+    </header>
+    <main>
+      <section id="project-section">
+        <div class="container">
+          <div class="headline">
+            <h1>Welocome to your Project Manager!</h1>
+          </div>
+          <div class="subline">
+            <h2>Create a project!</h2>
+          </div>
+          <div class="form">
+            <form>
+              <div class="upper-form">
+                <div class="input-group">
+                  <label>Project</label>
+                  <input type="text" name="projectNumber" />
+                </div>
+                <div class="input-group">
+                  <label>Title</label>
+                  <input type="text" name="title" />
+                </div>
+                <label>Description</label>
+                <input type="text" name="description" />
+              </div>
+
+              <div class="middle-form">
+                <div class="input-group">
+                  <label>StartDate</label>
+                  <input type="date" name="startDate" />
+                </div>
+                <div class="input-group">
+                  <label>EndDate</label>
+                  <input type="date" name="endDate" />
+                </div>
+                <div class="input-group">
+                  <label>Status</label>
+                  <select name="statusId" id="statusId">
+                    <!-- <option value="1">Pågår</option> -->
+                  </select>
+                </div>
+              </div>
+              <div class="lower-form">
+                <div class="input-group">
+                  <label>Choose a manager</label>
+                  <select id="userId" name="userId">
+                    <!-- <option>User1</option> -->
+                  </select>
+                </div>
+                <label>Service</label>
+                <select name="serviceId" id="serviceId">
+                  <!-- <option value="">Konsult</option> -->
+                </select>
+                <label>Kund</label>
+                <select name="customerId" id="customerId">
+                  <!-- <option value="">Kund1</option> -->
+                </select>
+              </div>
+              <div class="input-group">
+                <label for="totalPrice">Total price</label>
+                <input
+                  type="number"
+                  name="totalPrice"
+                  id="totalPrice"
+                  value=""
+                />
+              </div>
+
+              <button type="submit">CLICK</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+  <script src="/Js/script.js"></script>
+</html>

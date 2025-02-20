@@ -42,11 +42,12 @@ public class CustomerContactFactory : ICustomerContactFactory
     {
         return new CustomerContact()
         {
-            // ID?
+            CustomerContactId = customerContactEntity.Id,
             FirstName = customerContactEntity.FirstName,
             LastName = customerContactEntity.LastName,
             Email = customerContactEntity.Email,
             PhoneNumber = customerContactEntity.PhoneNumber,
+            CustomerId = customerContactEntity.CustomerId,
             CustomerName = customerContactEntity.Customer.CustomerName
         };
     }

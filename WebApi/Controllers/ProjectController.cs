@@ -35,6 +35,13 @@ public class ProjectController(IProjectService projectService) : ControllerBase
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _projectService.GetProjectByIdAsync(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, ProjectUpdateDto updatedDto)
@@ -51,3 +58,4 @@ public class ProjectController(IProjectService projectService) : ControllerBase
 
     }
 }
+    

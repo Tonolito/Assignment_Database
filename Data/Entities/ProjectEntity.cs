@@ -11,7 +11,7 @@ public class ProjectEntity
 
     [Required]
     [Column(TypeName = "nvarchar(50)")]
-    public string ProjectNumber { get;} = null!;
+    public string ProjectNumber { get; set; } = null!;
 
     [Required]
     [Column(TypeName = "nvarchar(150)")]

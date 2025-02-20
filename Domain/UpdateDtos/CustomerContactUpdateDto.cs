@@ -6,7 +6,7 @@ namespace Domain.UpdateDtos;
 public class CustomerContactUpdateDto
 {
 
-    public int Id { get; set; }
+    public int CustomerContactId { get; set; }
 
     public string FirstName { get; set; } = null!;
 
@@ -15,5 +15,7 @@ public class CustomerContactUpdateDto
     public string Email { get; set; } = null!;
 
     public string PhoneNumber { get; set; } = null!;
+
+    public int CustomerId { get; set; }
 
 }

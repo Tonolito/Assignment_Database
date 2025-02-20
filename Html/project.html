@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uppdatera Projekt</title>
+  </head>
+  <body>
+    <header>
+        <div class="container">
+          <a id="logo" href="index.html"> LOGO </a>
+          <nav id="main-menu" class="navbar">
+            <a class="nav-link" href="project.html">Projects</a>
+            <a class="nav-link" href="project.html">Users</a>
+            <a class="nav-link" href="project.html">Customers</a>
+            <a class="nav-link" href="project.html">Services</a>
+            <a class="nav-link" href="project.html">Miscellaneous</a>
+          </nav>
+          <a>TEST</a>
+        </div>
+      
+    < <h1>Uppdatera Projekt</h1>
+
+    <!-- Dropdown för att välja projekt -->
+    <label for="projectSelect">Välj projekt:</label>
+    <select id="projectSelect" onchange="loadProjectDetails()">
+        <option value="">Välj...</option>
+    </select>
+
+    <!-- Formulär för att redigera projekt -->
+    <form id="updateForm">
+      <label for="projectNumber">Projektnummer:</label>
+      <input type="text" id="projectNumber" required><br>
+  
+      <label for="title">Titel:</label>
+      <input type="text" id="title" required><br>
+  
+      <label for="description">Beskrivning:</label>
+      <textarea id="description" required></textarea><br>
+  
+      <label for="startDate">Startdatum:</label>
+      <input type="date" id="startDate" required><br>
+  
+      <label for="endDate">Slutdatum:</label>
+      <input type="date" id="endDate" required><br>
+  
+      <label for="totalPrice">Totalt Pris:</label>
+      <input type="number" id="totalPrice" required><br>
+  
+      <!-- Dropdowns för att ändra kopplingar -->
+      <label for="statusId">Status:</label>
+      <select id="statusId"></select><br>
+  
+      <label for="userId">Användare:</label>
+      <select id="userId"></select><br>
+  
+      <label for="serviceId">Tjänst:</label>
+      <select id="serviceId"></select><br>
+  
+      <label for="customerId">Kund:</label>
+      <select id="customerId"></select><br>
+  
+      <button type="button" onclick="updateProject()">Uppdatera</button>
+  </form>
+  
+
+    <script src="/Js/getprojectscript.js"></script>
+  </body>
+</html>

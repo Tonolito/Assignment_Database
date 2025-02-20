@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Business.Services;
 using Domain.Dtos;
 using Domain.UpdateDtos;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,20 @@ public class RoleController(IRoleService roleService) : ControllerBase
         var result = await _roleService.GetRolesAsync();
         return result != null ? Ok(result) : NotFound("Was not found");
 
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _roleService.GetRoleByIdAsync(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, RoleUpdateDto updatedDto)
+    {
+        var result = await _roleService.UpdateRoleAsync(updatedDto);
+        return result == true ? Ok(result) : NotFound("Not found");
     }
 
     [HttpDelete("{id}")]

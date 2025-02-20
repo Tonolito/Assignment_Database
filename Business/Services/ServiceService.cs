@@ -65,24 +65,36 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
         }
     }
 
-    public async Task<bool> UpdateServiceAsync(ServiceUpdateDto serviceUpdateDto)
+    public async Task<bool> UpdateServiceAsync(ServiceUpdateDto updateDto)
     {
         try
         {
-            var existingServiceEntity = await _serviceRepository.GetAsync(x => x.Id == serviceUpdateDto.Id);
-            if (existingServiceEntity != null)
+            var exstingEntity = await _serviceRepository.GetAsync(x => x.Id == updateDto.ServiceId);
+            if (exstingEntity == null)
             {
-
+                return false;
             }
 
-            var updatedEntity = await _serviceRepository.UpdateAsync(x => x.Id == serviceUpdateDto.Id, existingServiceEntity!);
 
-            var customer = _serviceFactory.CreateService(updatedEntity);
+            exstingEntity.Id = updateDto.ServiceId;
+            exstingEntity.ServiceName = updateDto.ServiceName;
+            exstingEntity.Price = updateDto.Price;
+            exstingEntity.UnitId = updateDto.UnitId;
+
+
+
+            var updatedEntity = await _serviceRepository.UpdateAsync(x => x.Id == updateDto.ServiceId, exstingEntity!);
+
+            if (updatedEntity == null)
+            {
+                return false;
+            }
+
             return true;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Service Service UpdateServiceAsync Error:{ex}");
+            Debug.WriteLine(ex);
             return false;
         }
     }

@@ -72,14 +72,15 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerFa
     {
         try
         {
-            var existingCustomerEntity = await _customerRepository.GetAsync(x => x.Id == updateDto.Id);
+            var existingCustomerEntity = await _customerRepository.GetAsync(x => x.Id == updateDto.CustomerId);
             if (existingCustomerEntity != null)
             {
+                existingCustomerEntity.Id = updateDto.CustomerId;
                 existingCustomerEntity.CustomerName = updateDto.CustomerName;
                 existingCustomerEntity.CompanyName = updateDto.CompanyName;
             }
 
-            var updatedEntity = await _customerRepository.UpdateAsync(x => x.Id == updateDto.Id, existingCustomerEntity!);
+            var updatedEntity = await _customerRepository.UpdateAsync(x => x.Id == updateDto.CustomerId, existingCustomerEntity!);
 
             var customer = _customerFactory.CreateCustomer(updatedEntity);
             return true;

@@ -8,6 +8,6 @@ namespace Domain.UpdateDtos;
 
 public class StatusTypeUpdateDto
 {
-    public int Id { get; set; }
+    public int StatusTypeId { get; set; }
     public string StatusName { get; set; } = null!;
 }

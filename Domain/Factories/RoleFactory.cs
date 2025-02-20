@@ -24,6 +24,7 @@ public class RoleFactory : IRoleFactory
     {
         return new Role()
         {
+            RoleId = roleEntity.Id,
             RoleName = roleEntity.RoleName,
         };
     }

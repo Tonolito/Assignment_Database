@@ -1,9 +1,11 @@
 ﻿using Business.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 using Domain.Dtos;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.UpdateDtos;
 using System.Diagnostics;
 
 namespace Business.Services;
@@ -61,6 +63,38 @@ public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactor
         {
             Debug.WriteLine($"Customer Service GetRoleByIdAsync Error:{ex}");
             return null!;
+        }
+    }
+    public async Task<bool> UpdateRoleAsync(RoleUpdateDto updateDto)
+    {
+        try
+        {
+            var exstingEntity = await _roleRepository.GetAsync(x => x.Id == updateDto.RoleId);
+            if (exstingEntity == null)
+            {
+                return false;  
+            }
+
+            
+            exstingEntity.Id = updateDto.RoleId;
+            exstingEntity.RoleName = updateDto.RoleName;
+            
+            
+            
+
+            var updatedEntity = await _roleRepository.UpdateAsync(x => x.Id == updateDto.RoleId, exstingEntity!);
+
+            if (updatedEntity == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
         }
     }
     public async Task<bool> DeleteRoleAsync(int id)

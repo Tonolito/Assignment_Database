@@ -24,6 +24,7 @@ public class UnitFactory : IUnitFactory
     {
         return new Unit()
         {
+            UnitId = unitEntity.Id,
             UnitName = unitEntity.UnitName,
         };
     }

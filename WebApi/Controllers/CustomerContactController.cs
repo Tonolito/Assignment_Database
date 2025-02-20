@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Business.Services;
 using Data.Interfaces;
 using Domain.Dtos;
 using Domain.UpdateDtos;
@@ -36,10 +37,18 @@ public class CustomerContactController(ICustomerContactService customerContactSe
             
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _customerContactService.GetCustomerContactByIdAsync(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, CustomerContactUpdateDto updatedDto)
     {
-        var result = await _customerContactService.UpdateCustomerContactAsync(   updatedDto);
+        var result = await _customerContactService.UpdateCustomerContactAsync( updatedDto);
         return result == true ? Ok(result) : NotFound("Not found");
     }
 

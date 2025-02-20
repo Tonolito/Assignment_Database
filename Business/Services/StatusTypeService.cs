@@ -53,17 +53,19 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
             return [];
         }
     }
-    public async Task<bool> UpdateServiceAsync(StatusTypeUpdateDto statusTypeUpdateDto)
+    public async Task<bool> UpdateServiceAsync(StatusTypeUpdateDto UpdateDto)
     {
         try
         {
-            var existingStatusTypeEntity = await _statusTypeRepository.GetAsync(x => x.Id == statusTypeUpdateDto.Id);
-            if (existingStatusTypeEntity != null)
+            var existingEntity = await _statusTypeRepository.GetAsync(x => x.Id == UpdateDto.StatusTypeId);
+            if (existingEntity == null)
             {
-
+                return false;
             }
+            existingEntity.StatusName = UpdateDto.StatusName;
+            existingEntity.Id = UpdateDto.StatusTypeId;
 
-            var updatedEntity = await _statusTypeRepository.UpdateAsync(x => x.Id == statusTypeUpdateDto.Id, existingStatusTypeEntity!);
+            var updatedEntity = await _statusTypeRepository.UpdateAsync(x => x.Id == UpdateDto.StatusTypeId, existingEntity!);
 
             var statusType = _statusTypeFactory.CreateStatusType(updatedEntity);
             return true;

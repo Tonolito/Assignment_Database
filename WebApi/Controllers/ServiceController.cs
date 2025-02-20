@@ -35,6 +35,13 @@ public class ServiceController(IServiceService serviceService) : ControllerBase
         return result != null ? Ok(result) : NotFound("Was not found");
 
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _serviceService.GetServiceById(id);
+        return result != null ? Ok(result) : NotFound("Was not found");
+
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, ServiceUpdateDto updatedDto)

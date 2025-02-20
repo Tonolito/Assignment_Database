@@ -24,7 +24,8 @@ public class StatusTypeFactory : IStatusTypeFactory
     {
         return new StatusType()
         {
-            StatusName= statusTypeEntity.StatusName,
+            StatusTypeId = statusTypeEntity.Id,
+            StatusName = statusTypeEntity.StatusName,
         };
     }
 }
