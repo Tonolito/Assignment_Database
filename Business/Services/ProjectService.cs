@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 using Domain.Dtos;
 using Domain.Interfaces;
 using Domain.Models;
@@ -16,20 +17,27 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
 
     public async Task<bool> CreateProjectAsync(ProjectDto projectDto)
     {
+        await _projectRepository.BeginTransactionAsync();
+
         try
         {
             ProjectEntity projectEntity = _projectFactory.CreateProjectEntity(projectDto);
 
             var result = await _projectRepository.CreateAsync(projectEntity);
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
+            await _projectRepository.SaveAsync();
 
+
+            await _projectRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _projectRepository.RollbackTransactionAsync();
+
             Debug.WriteLine($"Project Service CreateProjectAsync Error:{ex}");
             return false;
         }
@@ -79,6 +87,8 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
 
     public async Task<bool> UpdateProjectAsync(ProjectUpdateDto updateDto)
     {
+        await _projectRepository.BeginTransactionAsync();
+
         try
         {
             var existingProjectEntity = await _projectRepository.GetAsync(x => x.Id == updateDto.Id);
@@ -102,6 +112,10 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
             // Uppdatera projektet i databasen
             var updatedEntity = await _projectRepository.UpdateAsync(x => x.Id == updateDto.Id, existingProjectEntity!);
 
+            await _projectRepository.SaveAsync();
+
+            await _projectRepository.CommitTransactionAsync();
+
             if (updatedEntity == null)
             {
                 return false;  // Misslyckades att uppdatera
@@ -111,14 +125,32 @@ public class ProjectService(IProjectRepository projectRepository, IProjectFactor
         }
         catch (Exception ex)
         {
-           
+           await _projectRepository.RollbackTransactionAsync();
+            Debug.WriteLine($"Customer Service UpdateProjectAsync Error:{ex}");
+
             return false;
         }
     }
 
     public async Task<bool> DeleteProjectAsync(int id)
     {
-        var result = await _projectRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _projectRepository.BeginTransactionAsync();
+
+        try
+        {
+            var result = await _projectRepository.DeleteAsync(x => x.Id == id);
+
+            await _projectRepository.SaveAsync();
+            await _projectRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _projectRepository.RollbackTransactionAsync();
+            Debug.WriteLine($"Customer Service DeleteProjectAsync Error:{ex}");
+
+            return false;
+        }
+        
     }
 }

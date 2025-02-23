@@ -18,23 +18,30 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
 
     public async Task<bool> CreateCustomerContactAsync(CustomerContactDto customerContactDto)
     {
+        await _customerContactRepository.BeginTransactionAsync();
+
         try
         {
             CustomerContactEntity customerContactEntity = _customerContactFactory.CreateCustomerContactEntity(customerContactDto);
 
             var result = await _customerContactRepository.CreateAsync(customerContactEntity);
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
             else
             {
+                await _customerContactRepository.SaveAsync();
+                await _customerContactRepository.CommitTransactionAsync();
+
                 return true;
             }
             
         }
         catch (Exception ex)
         {
+            await _customerContactRepository.RollbackTransactionAsync();
+
             Debug.WriteLine($"CustomerContact Service CreateCustomerContactAsync Error:{ex}");
             return false;
         }
@@ -70,6 +77,8 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
 
     public async Task<bool> UpdateCustomerContactAsync(CustomerContactUpdateDto CustomerContactupdateDto)
     {
+        await _customerContactRepository.BeginTransactionAsync();
+
         try
         {
             var existingEntity = await _customerContactRepository.GetAsync(x => x.Id == CustomerContactupdateDto.CustomerContactId);
@@ -86,10 +95,15 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
             var updatedEntity = await _customerContactRepository.UpdateAsync(x => x.Id == CustomerContactupdateDto.CustomerContactId, existingEntity!);
 
             var customer = _customerContactFactory.CreateCustomerContact(updatedEntity);
+
+            await _customerContactRepository.SaveAsync();
+
+            await _customerContactRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _customerContactRepository.RollbackTransactionAsync();
             Debug.WriteLine($"CustomerContact Service UpdateCustomerContactAsync Error:{ex}");
             return false;
         }
@@ -97,7 +111,22 @@ public class CustomerContactService(ICustomerContactRepository customerContactRe
 
     public async Task<bool> DeleteCustomerContactAsync(int id)
     {
-        var result = await _customerContactRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _customerContactRepository.BeginTransactionAsync();
+
+        try
+        {
+            var result = await _customerContactRepository.DeleteAsync(x => x.Id == id);
+
+            await _customerContactRepository.SaveAsync();
+            await _customerContactRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _customerContactRepository.RollbackTransactionAsync();
+
+            Debug.WriteLine($"CustomerContact Service DeleteCustomerContactAsync Error:{ex}");
+            return false;
+        }
     }
 }

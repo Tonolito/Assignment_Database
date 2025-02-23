@@ -1,3 +1,7 @@
+// Genererat av chatgpt
+
+
+
 // Populera dropdowns när sidan har laddats
 document.addEventListener("DOMContentLoaded", function () {
   // Fyll på dropdowns med data

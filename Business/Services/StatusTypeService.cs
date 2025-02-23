@@ -18,23 +18,28 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
 
     public async Task<bool> CreateStatusTypeAsync(StatusTypeDto statusTypeDto)
     {
+        await _statusTypeRepository.BeginTransactionAsync();
         try
         {
             StatusTypeEntity statusTypeEntity = _statusTypeFactory.CreateStatusTypeEntity(statusTypeDto);
 
             var result = await _statusTypeRepository.CreateAsync(statusTypeEntity);
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
             else
             {
+                await _statusTypeRepository.SaveAsync();
+
+                await _statusTypeRepository.CommitTransactionAsync();
                 return true;
 
             }
         }
         catch (Exception ex)
         {
+            await _statusTypeRepository.RollbackTransactionAsync();
             Debug.WriteLine($"StatusType Service CreateStatusTypeAsync Error:{ex}");
             return false;
         }
@@ -55,6 +60,7 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
     }
     public async Task<bool> UpdateServiceAsync(StatusTypeUpdateDto UpdateDto)
     {
+        await _statusTypeRepository.BeginTransactionAsync();
         try
         {
             var existingEntity = await _statusTypeRepository.GetAsync(x => x.Id == UpdateDto.StatusTypeId);
@@ -66,12 +72,15 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
             existingEntity.Id = UpdateDto.StatusTypeId;
 
             var updatedEntity = await _statusTypeRepository.UpdateAsync(x => x.Id == UpdateDto.StatusTypeId, existingEntity!);
-
+            await _statusTypeRepository.SaveAsync();
+            await _statusTypeRepository.CommitTransactionAsync();
             var statusType = _statusTypeFactory.CreateStatusType(updatedEntity);
             return true;
         }
         catch (Exception ex)
         {
+            await _statusTypeRepository.RollbackTransactionAsync();
+
             Debug.WriteLine($"Service Service UpdateServiceAsync Error:{ex}");
             return false;
         }
@@ -93,7 +102,20 @@ public class StatusTypeService(IStatusTypeRepository statusTypeRepository, IStat
 
     public async Task<bool> DeleteStatusTypeAsync(int id)
     {
-        var result = await _statusTypeRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _statusTypeRepository.BeginTransactionAsync();
+        try
+        {
+            var result = await _statusTypeRepository.DeleteAsync(x => x.Id == id);
+            await _statusTypeRepository.SaveAsync();
+
+            await _statusTypeRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _statusTypeRepository.RollbackTransactionAsync();
+            Debug.WriteLine(ex.Message);
+            return false;
+        }
     }
 }

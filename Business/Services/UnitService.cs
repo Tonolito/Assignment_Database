@@ -17,19 +17,24 @@ public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactor
 
     public async Task<bool> CreateUnitAsync(UnitDto dto)
     {
+        await _unitRepository.BeginTransactionAsync();
         try
         {
             UnitEntity unitEntity = _unitFactory.CreateUnitEntity(dto);
 
             var result = await _unitRepository.CreateAsync(unitEntity);
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
+            await _unitRepository.SaveAsync();
+
+            await _unitRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _unitRepository.RollbackTransactionAsync();
             Debug.WriteLine($"Unit Service CreateUnitAsync Error:{ex}");
             return false;
         }
@@ -80,16 +85,20 @@ public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactor
 
 
             var updatedEntity = await _unitRepository.UpdateAsync(x => x.Id == updateDto.UnitId, exstingEntity!);
+            await _unitRepository.SaveAsync();
 
+            
             if (updatedEntity == null)
             {
                 return false;
             }
 
+            await _unitRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _unitRepository.RollbackTransactionAsync();
             Debug.WriteLine(ex);
             return false;
         }
@@ -97,7 +106,19 @@ public class UnitService(IUnitRepository unitRepository, IUnitFactory unitFactor
 
     public async Task<bool> DeleteUnitAsync(int id)
     {
-        var result = await _unitRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _unitRepository.BeginTransactionAsync();
+        try
+        {
+            var result = await _unitRepository.DeleteAsync(x => x.Id == id);
+            await _unitRepository.SaveAsync();
+            await _unitRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _unitRepository.RollbackTransactionAsync();
+            Debug.WriteLine($"{ex.Message}");
+            return false; 
+        }
     }
 }

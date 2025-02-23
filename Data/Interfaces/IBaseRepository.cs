@@ -5,7 +5,7 @@ namespace Data.Interfaces;
 public interface IBaseRepository<TEntity> where TEntity : class
 {
     // CREATE
-     Task<TEntity> CreateAsync(TEntity entity);
+     Task<bool> CreateAsync(TEntity entity);
 
     // READ
     Task<IEnumerable<TEntity>> GetAllAsync();
@@ -16,5 +16,11 @@ public interface IBaseRepository<TEntity> where TEntity : class
     //DELETE
     Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> expression);
 
+    //Save
+    Task<int> SaveAsync();
 
+    // TransAction
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
 }

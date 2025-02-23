@@ -18,20 +18,25 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
 
     public async Task<bool> CreateServiceAsync(ServiceDto serviceDto)
     {
+        await _serviceRepository.BeginTransactionAsync();
         try
         {
             ServiceEntity serviceEntity = _serviceFactory.CreateServiceEntity(serviceDto);
 
             var result = await _serviceRepository.CreateAsync(serviceEntity);
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
 
+            await _serviceRepository.SaveAsync();
+
+            await _serviceRepository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _serviceRepository.RollbackTransactionAsync();
             Debug.WriteLine($"Service Service CreateServiceAsync Error:{ex}");
             return false;
         }
@@ -67,6 +72,7 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
 
     public async Task<bool> UpdateServiceAsync(ServiceUpdateDto updateDto)
     {
+        await _serviceRepository.BeginTransactionAsync();
         try
         {
             var exstingEntity = await _serviceRepository.GetAsync(x => x.Id == updateDto.ServiceId);
@@ -85,6 +91,9 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
 
             var updatedEntity = await _serviceRepository.UpdateAsync(x => x.Id == updateDto.ServiceId, exstingEntity!);
 
+            await _serviceRepository.SaveAsync();
+
+            await _serviceRepository.CommitTransactionAsync();
             if (updatedEntity == null)
             {
                 return false;
@@ -94,6 +103,7 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
         }
         catch (Exception ex)
         {
+            await _serviceRepository.RollbackTransactionAsync();
             Debug.WriteLine(ex);
             return false;
         }
@@ -101,7 +111,21 @@ public class ServiceService(IServiceRepository serviceRepository, IServiceFactor
 
     public async Task<bool> DeleteServiceContactAsync(int id)
     {
-        var result = await _serviceRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _serviceRepository.BeginTransactionAsync();
+        try
+        {
+            var result = await _serviceRepository.DeleteAsync(x => x.Id == id);
+
+            await _serviceRepository.SaveAsync();
+
+            await _serviceRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _serviceRepository.RollbackTransactionAsync();
+            Debug.WriteLine($"{ex.Message}");
+            return false;
+        }
     }
 }

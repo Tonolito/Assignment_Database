@@ -18,23 +18,27 @@ public class UserService(IUserRepository repository, IUserFactory userFactory) :
 
     public async Task<bool> CreateUserAsync(UserDto dto)
     {
+        await _repository.BeginTransactionAsync();
         try
         {
             UserEntity entity = _userFactory.CreateUserEntity(dto);
 
             var result = await _repository.CreateAsync(entity);
 
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
             else
             {
+                await _repository.SaveAsync();
+                await _repository.CommitTransactionAsync();
                 return true;
             }
         }
         catch (Exception ex)
         {
+            await _repository.RollbackTransactionAsync();
             Debug.WriteLine($"User Service CreateUserEntity Error:{ex}");
             return false;
         }
@@ -70,6 +74,7 @@ public class UserService(IUserRepository repository, IUserFactory userFactory) :
 
     public async Task<bool> UpdateUserAsync(UserUpdateDto updateDto)
     {
+        await _repository.BeginTransactionAsync();
         try
         {
 
@@ -87,12 +92,15 @@ public class UserService(IUserRepository repository, IUserFactory userFactory) :
             existingEntity.RoleId = updateDto.RoleId;
 
             var updatedEntity = await _repository.UpdateAsync(x => x.Id == updateDto.UserId, existingEntity!);
-
+            await _repository.SaveAsync();
             var customer = _userFactory.CreateUser(updatedEntity);
+            
+            await _repository.CommitTransactionAsync();
             return true;
         }
         catch (Exception ex)
         {
+            await _repository.RollbackTransactionAsync();
             Debug.WriteLine($"User Service UpdateUserAsync Error:{ex}");
             return false;
         }
@@ -100,7 +108,22 @@ public class UserService(IUserRepository repository, IUserFactory userFactory) :
 
     public async Task<bool> DeleteUserAsync(int id)
     {
-        var result = await _repository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _repository.BeginTransactionAsync();
+        try
+        {
+            var result = await _repository.DeleteAsync(x => x.Id == id);
+
+            await _repository.SaveAsync();
+
+            await _repository.CommitTransactionAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _repository.RollbackTransactionAsync();
+            Debug.WriteLine($"User Service UpdateUserAsync Error:{ex}");
+            return false;
+        }
+       
     }
 }

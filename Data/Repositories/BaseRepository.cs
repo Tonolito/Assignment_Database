@@ -1,8 +1,11 @@
 ﻿using Data.Contexts;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 using System.Diagnostics;
 using System.Linq.Expressions;
+
 
 namespace Data.Repositories;
 /// <summary>
@@ -14,32 +17,64 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 {
     protected readonly DataContext _context = context;
     protected readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
+    private IDbContextTransaction _transaction = null!;
 
-    //           https://youtu.be/qKxl0f6ZwqA?t=309
+
+
+
+    #region TRANSACTION
+    public virtual async Task BeginTransactionAsync()
+    {
+        if (_transaction == null)
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+    }
+
+
+    public virtual async Task CommitTransactionAsync()
+    {
+        if (_transaction != null)
+        {
+            await _transaction.CommitAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null!;
+        }
+    }
+
+    public virtual async Task RollbackTransactionAsync()
+    {
+        if (_transaction != null)
+        {
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null!;
+        }
+    }
+    #endregion
+
     //Create
     /// <summary>
-    /// Creates an Entity and saves it to the db
+    /// Adds a entity
     /// </summary>
     /// <param name="entity">Generic Entity</param>
     /// <returns>Entity</returns>
-    public virtual async Task<TEntity> CreateAsync(TEntity entity)
+    public virtual async Task<bool> CreateAsync(TEntity entity)
     {
         if (entity == null)
         {
-            return null!;
+            return false;
         }
         try
         {
             await _dbSet.AddAsync(entity);
-
-            await _context.SaveChangesAsync();
-
-            return entity;
+            // TAGIT BORT SAVE
+            return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"CreateAsync ({nameof(TEntity)}) Error: {ex}");
-            return null!;
+            return false;
         }
     }
     //Read
@@ -80,7 +115,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
                 return null!;
             }
             _dbSet.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
-            await _context.SaveChangesAsync();
             return existingEntity;
         }
         catch (Exception ex)
@@ -105,7 +139,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
                 return false;
             }
             _dbSet.Remove(existingEntity);
-            await _context.SaveChangesAsync();
+            // TAGIT BORT SAVE
             return true;
         }
         catch (Exception ex)
@@ -114,6 +148,12 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 
             return false;
         }
+    }
+
+    //Save
+    public virtual async Task<int> SaveAsync()
+    {
+        return await _context.SaveChangesAsync();
     }
     
 }

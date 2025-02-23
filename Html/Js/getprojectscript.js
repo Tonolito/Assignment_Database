@@ -1,3 +1,7 @@
+// Genererat av chatgpt
+
+
+
 const apiUrl = "https://localhost:7288/api/project";
 
 // 🔹 Hämta alla projekt och fyll dropdown

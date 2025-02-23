@@ -17,23 +17,28 @@ public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactor
 
     public async Task<bool> CreateRoleAsync(RoleDto roleDto)
     {
+        await _roleRepository.BeginTransactionAsync();
         try
         {
             RoleEntity roleEntity = _roleFactory.CreateRoleEntity(roleDto);
 
            var result = await _roleRepository.CreateAsync(roleEntity);
 
-            if (result == null)
+            if (result == false)
             {
                 return false;
             }
             else
             {
+                await _roleRepository.SaveAsync();
+
+                await _roleRepository.CommitTransactionAsync();
                 return true;
             }
         }
         catch (Exception ex)
         {
+            await _roleRepository.RollbackTransactionAsync();
             Debug.WriteLine($"Role Service CreateRoleAsync Error:{ex}");
             return false;
         }
@@ -84,6 +89,9 @@ public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactor
 
             var updatedEntity = await _roleRepository.UpdateAsync(x => x.Id == updateDto.RoleId, exstingEntity!);
 
+            await _roleRepository.SaveAsync();
+            
+            await _roleRepository.CommitTransactionAsync();
             if (updatedEntity == null)
             {
                 return false;
@@ -93,14 +101,29 @@ public class RoleService(IRoleRepository roleRepository, IRoleFactory roleFactor
         }
         catch (Exception ex)
         {
+            await _roleRepository.RollbackTransactionAsync();
             Debug.WriteLine(ex);
             return false;
         }
     }
     public async Task<bool> DeleteRoleAsync(int id)
     {
-        var result = await _roleRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        await _roleRepository.BeginTransactionAsync();
+        try
+        {
+            var result = await _roleRepository.DeleteAsync(x => x.Id == id);
+
+            await _roleRepository.SaveAsync();
+
+            await _roleRepository.CommitTransactionAsync();
+            return result;
+        }
+        catch(Exception ex) 
+        {
+            await _roleRepository.RollbackTransactionAsync();
+            Debug.WriteLine(ex);
+            return false;
+        }
     }
 }
     
